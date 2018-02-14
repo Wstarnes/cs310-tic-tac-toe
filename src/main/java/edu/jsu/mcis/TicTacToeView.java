@@ -1,22 +1,68 @@
 package edu.jsu.mcis;
-
-public class TicTacToeView {
-
-    private TicTacToeModel model;
-    
-    /* CONSTRUCTOR */
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+public class TicTacToeView extends JPanel implements ActionListener{
+	TicTacToeModel model;
+	private JButton[][] squares;
+	private JPanel squaresPanel;
+	private JLabel resultLabel;
+	public TicTacToeView(TicTacToeModel model){
+		this.model = model;
+		int width = model.getWidth();
+		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		squares = new JButton[width][width];
+		squaresPanel = new JPanel(new GridLayout(width, width));
+		resultLabel = new JLabel();
+		resultLabel.setName("ResultLabel");
+		
+		for (int row = 0; row<width; row++){
+			for(int col= 0; col< width; col++){
+				squares[row][col] = new JButton();
+				squares[row][col].addActionListener(this);
+				squares[row][col].setName("Square" + row +col);
+				squares[row][col].setPreferredSize(new Dimension(64, 64));
+				squaresPanel.add(squares[row][col]);
+			}
+		}
+		add(squaresPanel);
+		add(resultLabel);
+		resultLabel.setText("Welcome to Tic-Tac-Toe!");
+		
+	}
 	
-    public TicTacToeView(TicTacToeModel model) {
-        
-        this.model = model;
-        
-    }
+	public void actionPerformed(ActionEvent event){
+		String name = ((JButton)event.getSource()).getName();
+		int row = (int) name.charAt(6) - 48, col = (int)name.charAt (7)-48;
+		if(!model.makeMark(row, col)){
+		
+		}
+		else{
+			String mark = model.getMark(row, col).toString();
+			((JButton)event.getSource()).setText(mark);
+			if(model.getResult() == TicTacToeModel.Result.NONE){
+				
+			}
+			else{
+				if(model.getResult() == TicTacToeModel.Result.X){
+					resultLabel.setText("X");
+				}
+				else if(model.getResult() == TicTacToeModel.Result.O){
+					resultLabel.setText("O");
+				}
+				else if(model.getResult() == TicTacToeModel.Result.TIE){
+					resultLabel.setText("TIE");
+				}
+			}
+		}	
+		
+	}
 	
-    public void viewModel() {
+	public void viewModel() {
         
         /* Print the board to the console (see examples) */
        
-        /* INSERT YOUR CODE HERE */
+        
 		System.out.print("  ");
 		for (int i = 0; i < model.getWidth(); i++ ){
 			System.out.print(i);
@@ -31,34 +77,6 @@ public class TicTacToeView {
 		}
 
     }
-
-    public void showNextMovePrompt() {
-
-        /* Display a prompt for the player's next move (see examples) */
-
-        /* INSERT YOUR CODE HERE */
-		if(model.isXTurn()){
-			System.out.println("Player 1 (X) Move: " + '\n' + "Enter the row and column numbers, separated by a space: ");
-		}
-		else{
-			System.out.println("Player 2 (O) Move: " + '\n' + "Enter the row and column numbers, separated by a space: ");
-		}
-    }
-
-    public void showInputError() {
-
-        /* Display an error if input is invalid (see examples) */
-
-        /* INSERT YOUR CODE HERE */
-		System.out.println("This is an input error.");
-    }
-
-    public void showResult(String r) {
-
-        /* Display final winner */
-
-        System.out.println(r + "!");
-
-    }
 	
 }
+	
